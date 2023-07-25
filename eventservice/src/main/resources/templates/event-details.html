@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Event Details</title>
+</head>
+<body>
+<h1>Event Details</h1>
+<p th:text="'ID: ' + ${event.id}"></p>
+<p th:text="'Title: ' + ${event.title}"></p>
+<p th:text="'Description: ' + ${event.description}"></p>
+<p th:text="'capacity: ' + ${event.capacity}"></p>
+<p th:text="'scheduleid: ' + ${event.scheduleid}"></p>
+<p th:text="'organizerId: ' + ${event.organizerId}"></p>
+<p th:text="'locationId: ' + ${event.locationId}"></p>
+<p th:text="'typeId: ' + ${event.typeId}"></p>
+<p th:text="'tags: ' + ${event.tags}"></p>
+</body>
+</html>

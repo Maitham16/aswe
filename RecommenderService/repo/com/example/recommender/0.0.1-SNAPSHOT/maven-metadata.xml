@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.example</groupId>
+  <artifactId>recommender</artifactId>
+  <versioning>
+    <lastUpdated>20230607134204</lastUpdated>
+    <snapshot>
+      <timestamp>20230607.134204</timestamp>
+      <buildNumber>5</buildNumber>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.0.1-20230607.134204-5</value>
+        <updated>20230607134204</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.0.1-20230607.134204-5</value>
+        <updated>20230607134204</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+  <version>0.0.1-SNAPSHOT</version>
+</metadata>

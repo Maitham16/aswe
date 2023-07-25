@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  shared-library:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8073:8073
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8073  
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true

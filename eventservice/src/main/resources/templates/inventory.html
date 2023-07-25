@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Inventory</title>
+</head>
+<body>
+    <h1>Event Inventory</h1>
+    <div id="div1">
+        <label id="label1" for="organizerId">Organizer ID:</label>
+        <input type="text" id="organizerId">
+        <button id="loadEventsBtn">Load Events</button>
+    </div>
+    <table id="eventTable" border="1">
+        <thead>
+            <tr>
+                <th>Event ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Tags</th>
+                <th>Organizer ID</th>
+                <th>Capacity</th>
+                <th>Schedule ID</th>
+                <th>Date</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="eventTableBody">
+            <tr th:each="event : ${events}">
+                <td th:text="${event.eventId}"></td>
+                <td th:text="${event.eventTitle}"></td>
+                <td th:text="${event.eventDescription}"></td>
+                <td th:text="${event.eventLocation}"></td>
+                <td th:text="${event.eventType}"></td>
+                <td th:text="${event.eventTags}"></td>
+                <td th:text="${event.eventOrganizerId}"></td>
+                <td th:text="${event.eventCapacity}"></td>
+                <td th:text="${event.eventScheduleId}"></td>
+                <td th:text="${event.eventDate}"></td>
+                <td><a th:href="@{/events/ui/update/{id}(id=${event.eventId})}">Update</a></td>
+                <td><a th:href="@{/events/ui/delete/{id}(id=${event.eventId})}">Delete</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(events)}">
+                <td colspan="11">No events found for the organizer.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#loadEventsBtn").click(function() {
+                var organizerId = $("#organizerId").val();
+                $.ajax({
+                    url: "/api/events/ui/" + organizerId,
+                    type: "GET",
+                    success: function(data) {
+                        $("#eventTableBody").empty();
+                        $("#eventTableBody").html(data);
+                    },
+                    error: function() {
+                        alert("Error loading events for organizer " + organizerId);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

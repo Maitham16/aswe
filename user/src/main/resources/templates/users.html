@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1>Users</h1>
+    <p>Welcome, <span th:text="${user.name}"></span>!</p>
+
+    <div th:if="${successMessage}">
+        <p style="color: green" th:text="${successMessage}"></p>
+    </div>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td><a th:href="@{/users/ui/edit/{id}(id=${user.id})}">Edit</a></td>
+            <td><a th:href="@{/users/ui/details/{id}(id=${user.id})}">Details</a></td>
+            <td><a th:href="@{/users/ui/delete/{id}(id=${user.id})}">Delete</a></td>
+        </tr>
+    </table>
+    <button onclick="window.location.href='/api/users/ui/create'">Add new user</button>
+</body>
+</html>

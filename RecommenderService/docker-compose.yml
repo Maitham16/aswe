@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    image: recommenderservice_docker_image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8073:8073
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8073
+      - SERVER_SERVLET_CONTEXT_PATH=/api
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS=always
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+      - SPRING_THYMELEAF_PREFIX=classpath:/templates/
+      - SPRING_THYMELEAF_SUFFIX=.html
+      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_H2_CONSOLE_PATH=/h2-console
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:eventsDB
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=4335
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=maith
+      - SPRING_RABBITMQ_PASSWORD=4335
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672

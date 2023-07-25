@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Search</title>
+    <style>
+        .search-box {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Search</h1>
+
+    <div class="search-box">
+        <h2>Search by ID</h2>
+        <form action="/api/events/event" method="get"> <!-- Replace with your search endpoint -->
+            <label for="id">Event ID:</label>
+            <input type="number" id="id" name="id" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- Results Section -->
+    <div id="search-results">
+        <!-- Results will be dynamically added here -->
+    </div>
+
+    <script>
+        function displaySearchResults(results) {
+            var resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            results.forEach(function(result) {
+                var eventDiv = document.createElement('div');
+
+                // Display event details
+                var eventId = result.id;
+                var eventTitle = result.title;
+                var organizerId = result.organizerId;
+
+                var eventDetails = document.createTextNode('Event ID: ' + eventId + ' | Title: ' + eventTitle + ' | Organizer ID: ' + organizerId);
+                eventDiv.appendChild(eventDetails);
+
+                // Create Edit button
+                var editButton = document.createElement('button');
+                editButton.innerHTML = 'Edit';
+                editButton.addEventListener('click', function() {
+                    navigateToEditEvent(eventId);
+                });
+                eventDiv.appendChild(editButton);
+
+                // Create Delete button
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = 'Delete';
+                deleteButton.addEventListener('click', function() {
+                    deleteEvent(eventId);
+                });
+                eventDiv.appendChild(deleteButton);
+
+                resultsContainer.appendChild(eventDiv);
+            });
+        }
+
+        function navigateToEditEvent(eventId) {
+            // Navigate to the edit event page. If you're using Angular with the Angular Router, it would look like this:
+            window.location.href = '/events/edit/' + eventId;
+        }
+
+        function deleteEvent(eventId) {
+            fetch('/events/' + eventId, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        // After deleting the event, remove it from the UI
+                        var eventDiv = document.getElementById('event-' + eventId);
+                        eventDiv.remove();
+                    } else {
+                        console.error('Failed to delete event');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

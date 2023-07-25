@@ -1,0 +1,60 @@
+version: '3.8'
+services:
+  eventservice:
+    image: eventservice_docker_image
+    environment:
+      - SERVER_PORT=8071
+      - SPRING_JPA_OPEN_IN_VIEW=true
+      - SPRING_THYMELEAF_CACHE=false
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS=always
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+      - SPRING_THYMELEAF_PREFIX=classpath:/templates/
+      - SPRING_THYMELEAF_SUFFIX=.html
+      - SERVER_SERVLET_CONTEXT_PATH=/api
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/events
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=0000
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_JPA_SHOW_SQL=true
+      - LOGGING_LEVEL_ORG_HIBERNATE_SQL=DEBUG
+      - LOGGING_LEVEL_ORG_HIBERNATE_TYPE=TRACE
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=maith
+      - SPRING_RABBITMQ_PASSWORD=4335
+      - SPRING_RABBITMQ_TEMPLATE_MANDATORY=true
+    ports:
+      - 8071:8071
+    depends_on:
+      - rabbitmq
+      - postgres
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=maith
+      - RABBITMQ_DEFAULT_PASS=4335
+    ports:
+      - 5672:5672
+      - 15673:15672
+
+  postgres:
+    image: postgres:latest
+    user: root
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=0000
+      - POSTGRES_DB=events
+    ports:
+      - 5433:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data:Z
+
+volumes:
+  postgres_data:
+
+

@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Create Event</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <h1>Create Event</h1>
+    <form id="ce" method="post">
+        <p>Organizer ID: <input type="text" name="organizerId" /></p>
+        <p>Title: <input type="text" name="title" /></p>
+        <p>Description: <input type="text" name="description" /></p>
+        <p>Capacity: <input type="number" name="capacity" /></p>
+        <p>Schedule ID: <input type="number" name="scheduleid" /></p>
+        <p>Type ID: <input type="number" name="typeId" /></p>
+        <p>Location ID: <input type="number" name="locationId" /></p>
+        <p>Tags: <input type="text" name="tags" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+    <div id="message"></div>
+    <script>
+        document.getElementById('ce').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            let json = {};
+            let allFieldsFilled = true;
+    
+            for (let [key, value] of formData.entries()) {
+                if (!value) {
+                    allFieldsFilled = false;
+                    break;
+                }
+                if (['organizerId', 'capacity', 'scheduleid', 'typeId', 'locationId'].includes(key)) {
+                    json[key] = parseInt(value);
+                } else {
+                    json[key] = value;
+                }
+            }
+    
+            if (!allFieldsFilled) {
+                document.getElementById('message').innerHTML = "All fields must be filled before submitting.";
+                return;
+            }
+    
+            fetch('http://localhost:8071/api/event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(json)
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error: ' + response.statusText);
+                }
+            }).then(data => {
+                document.getElementById('message').innerHTML = "Event created successfully!";
+                console.log(data)
+            })
+                .catch((error) => {
+                    document.getElementById('message').innerHTML = "An error occurred: " + error.message;
+                    console.error('Error:', error.message);
+                });
+    
+        });
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Event</title>
+</head>
+<body>
+    <h1>Update Event</h1>
+    <form action="#" th:action="@{/events/ui/update/{id}(id=${event.eventId})}" th:object="${event}" method="post">
+        <p>Organizer ID: <input type="text" th:value="${event.eventOrganizerId}" id="eventOrganizerId" name="eventOrganizerId" /></p>
+        <p>Title: <input type="text" th:value="${event.eventTitle}" id="eventTitle" name="eventTitle" /></p>
+        <p>Description: <input type="text" th:value="${event.eventDescription}" id="eventDescription" name="eventDescription" /></p>
+        <p>Capacity: <input type="number" th:value="${event.eventCapacity}" id="eventCapacity" name="eventCapacity" /></p>
+        <p>Schedule: <select id="eventScheduleId" name="eventScheduleId"></select></p>
+        <p>Type: <select id="eventTypeId" name="eventTypeId"></select></p>
+        <p>Location: <select id="eventLocationId" name="eventLocationId"></select></p>
+        <p>Tags: <input type="text" th:value="${event.eventTags}" id="eventTags" name="eventTags" /></p>
+        <p>Date: <input type="date" th:value="${event.eventDate}" id="eventDate" name="eventDate" /></p>
+        <input type="submit" value="Update">
+    </form>
+
+    <div id="message" th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    window.onload = function() {
+        // Fetch event schedules and populate the schedule dropdown
+        fetch('/api/events/eventschedule')
+            .then(response => response.json())
+            .then(schedules => {
+                let scheduleDropdown = document.getElementById('eventScheduleId');
+
+                schedules.forEach(schedule => {
+                    let option = document.createElement('option');
+                    option.text = schedule.eventscheduleid + '- ' + schedule.starttime;
+                    option.value = schedule.eventscheduleid;
+                    scheduleDropdown.add(option);
+                });
+            });
+
+        // Fetch event types and populate the type dropdown
+        fetch('/api/events/eventtype')
+            .then(response => response.json())
+            .then(types => {
+                let typeDropdown = document.getElementById('eventTypeId');
+
+                types.forEach(type => {
+                    let option = document.createElement('option');
+                    option.text = type.eventtypeid + '- ' + type.typename;
+                    option.value = type.eventtypeid;
+                    typeDropdown.add(option);
+                });
+            });
+
+        // Fetch locations and populate the location dropdown
+        fetch('/api/events/locations')
+            .then(response => response.json())
+            .then(locations => {
+                let locationDropdown = document.getElementById('eventLocationId');
+
+                locations.forEach(location => {
+                    let option = document.createElement('option');
+                    option.text = location.locationid + '- ' + location.address;
+                    option.value = location.locationid;
+                    locationDropdown.add(option);
+                });
+            });
+    };
+    </script>
+</body>
+</html>

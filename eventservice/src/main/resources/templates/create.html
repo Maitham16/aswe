@@ -1,0 +1,117 @@
+<h1>Create Event</h1>
+<div th:if="${message}">
+    <p th:text="${message}"></p>
+</div>
+<form id="create-event-form" onsubmit="event.preventDefault(); submitForm();">
+    <p>Organizer ID: <input type="text" id="eventOrganizerId" /></p>
+    <p>Title: <input type="text" id="eventTitle" /></p>
+    <p>Description: <input type="text" id="eventDescription" /></p>
+    <p>Capacity: <input type="number" id="eventCapacity" /></p>
+    <p>Date: <input type="date" id="eventDate" /></p>
+
+    <p>Schedule:
+        <select id="eventScheduleId">
+            <!-- populate this dropdown from your database -->
+        </select>
+    </p>
+
+    <p>Type:
+        <select id="eventTypeId">
+            <!-- populate this dropdown from your database -->
+        </select>
+    </p>
+
+    <p>Location:
+        <select id="eventLocationId">
+            <!-- populate this dropdown from your database -->
+        </select>
+    </p>
+
+    <p>Tags: <input type="text" id="eventTags" /></p>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+</form>
+<script>
+    // Fetch event schedules and populate the schedule dropdown
+    fetch('/api/events/eventschedule')
+        .then(response => response.json())
+        .then(schedules => {
+            let scheduleDropdown = document.getElementById('eventScheduleId');
+
+            schedules.forEach(schedule => {
+                let option = document.createElement('option');
+                option.text = schedule.eventscheduleid + '- ' + schedule.starttime;
+                option.value = schedule.eventscheduleid;
+                scheduleDropdown.add(option);
+            });
+        });
+
+    // Fetch event types and populate the type dropdown
+    fetch('/api/events/eventtype')
+        .then(response => response.json())
+        .then(types => {
+            let typeDropdown = document.getElementById('eventTypeId');
+
+            types.forEach(type => {
+                let option = document.createElement('option');
+                option.text = type.eventtypeid + '- ' + type.typename;
+                option.value = type.eventtypeid;
+                typeDropdown.add(option);
+            });
+        });
+
+    // Fetch locations and populate the location dropdown
+    fetch('/api/events/locations')
+        .then(response => response.json())
+        .then(locations => {
+            let locationDropdown = document.getElementById('eventLocationId');
+
+            locations.forEach(location => {
+                let option = document.createElement('option');
+                option.text = location.locationid + '- ' + location.address;
+                option.value = location.locationid;
+                locationDropdown.add(option);
+            });
+        });
+
+    function submitForm() {
+        let eventOrganizerId = document.getElementById('eventOrganizerId').value;
+        let eventTitle = document.getElementById('eventTitle').value;
+        let eventDescription = document.getElementById('eventDescription').value;
+        let eventCapacity = document.getElementById('eventCapacity').value;
+        let eventScheduleId = document.getElementById('eventScheduleId').value;
+        let eventTypeId = document.getElementById('eventTypeId').value;
+        let eventLocationId = document.getElementById('eventLocationId').value;
+        let eventTags = document.getElementById('eventTags').value;
+        let eventDate = document.getElementById('eventDate').value;
+
+        let event = {
+            eventOrganizerId: eventOrganizerId,
+            eventTitle: eventTitle,
+            eventDescription: eventDescription,
+            eventCapacity: eventCapacity,
+            eventScheduleId: eventScheduleId,
+            eventTypeId: eventTypeId,
+            eventLocationId: eventLocationId,
+            eventTags: eventTags,
+            eventDate: eventDate
+        };
+
+        console.log(eventScheduleId);
+        // Send a POST request to the server
+        fetch('/api/events', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(event)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                window.location.href = '/api/events/ui/created';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+</script>
